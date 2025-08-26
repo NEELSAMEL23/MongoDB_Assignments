@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB Q&A</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f9f9f9;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        details {
+            margin-bottom: 12px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .link-box {
+            margin: 20px 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .link-box a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .link-box a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>MongoDB Practice Problems</h2>
+
+    <div class="link-box">
+        <p>
+            📌 Create a project named <strong>India_Fort</strong>.
+            The collection of employees is provided in the link below:
+        </p>
+        <p>
+            🔗 <a href=""
+                target="_blank">
+                IndiaFort Collection (Download Here)
+            </a>
+        </p>
+    </div>
+
+    <details>
+        <summary>1. Find all entries where the name begins with "G" (Case Sensitive).</summary>
+        <pre>db.collection_name.find({ "name": { $regex: "^G" } });</pre>
+    </details>
+
+    <details>
+        <summary>2. Find all entries where the locations array contains any string starting with "Ch" (Case
+            Insensitive).</summary>
+        <pre>db.collection_name.find({ "locations": { $elemMatch: { $regex: "^Ch", $options: "i" } } });</pre>
+    </details>
+
+    <details>
+        <summary>3. Find all entries where the details have a property "Type" containing "Fort" anywhere in the value
+            (Case Insensitive).</summary>
+        <pre>db.collection_name.find({ "details.Type": { $regex: "Fort", $options: "i" } });</pre>
+    </details>
+
+    <details>
+        <summary>4. Find entries where the name ends with "Fort" (Case Sensitive).</summary>
+        <pre>db.collection_name.find({ "name": { $regex: "Fort$", $options: "" } });</pre>
+    </details>
+
+    <details>
+        <summary>5. Find all entries where the name contains either "Konda" or "Giri" anywhere in the text (Case
+            Sensitive).</summary>
+        <pre>db.collection_name.find({ "name": { $regex: "Konda|Giri" } });</pre>
+    </details>
+
+    <details>
+        <summary>6. Find entries where the locations array contains strings that have "India" anywhere, ignoring case.
+        </summary>
+        <pre>db.collection_name.find({ "locations": { $elemMatch: { $regex: "India", $options: "i" } } });</pre>
+    </details>
+
+    <details>
+        <summary>7. Find all entries where the last_edited field starts with "This page was last edited on" (Case
+            Sensitive).</summary>
+        <pre>db.collection_name.find({ "last_edited": { $regex: "^This page was last edited on" } });</pre>
+    </details>
+
+    <details>
+        <summary>8. Find entries where the details object has a "Built" property that includes "century", ignoring case.
+        </summary>
+        <pre>db.collection_name.find({ "details.Built": { $regex: "century", $options: "i" } });</pre>
+    </details>
+
+    <details>
+        <summary>9. Find all entries where the name starts with either "B" or "C" (Case Sensitive).</summary>
+        <pre>db.collection_name.find({ "name": { $regex: "^[BC]" } });</pre>
+    </details>
+
+    <details>
+        <summary>10. Find entries where the images array contains URLs ending with ".png" (Case Sensitive).</summary>
+        <pre>db.collection_name.find({ "images": { $elemMatch: { $regex: "\.png$" } } });</pre>
+    </details>
+
+    
+
+</body>
+
+</html>

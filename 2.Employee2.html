@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmployeeDB MongoDB Practice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f9f9f9;
+        }
+
+        h2 {
+            color: #004aad;
+        }
+
+        details {
+            margin-bottom: 12px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .link-box {
+            margin: 20px 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .link-box a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .link-box a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    </style>
+</head>
+
+<body>
+
+    <h2>EmployeeDB - MongoDB Practice Problems</h2>
+
+    <div class="link-box">
+        <p>
+            📌 Create a project named <strong>employee2db</strong>.
+            The collection of employees2 is provided in the link below:
+        </p>
+        <p>
+            🔗 <a href="https://drive.google.com/file/d/1aIQ1nKmmAzXWFBpl2a3iREIeLVyDznrK/view?usp=drive_link"
+                target="_blank">
+                Employee2 Collection (Download Here)
+            </a>
+        </p>
+    </div>
+
+    <details>
+        <summary>1. Increase the salary of all employees in the 'Sales' department by 5%.</summary>
+        <pre>
+db.employee.updateMany(
+    { department: 'Sales' },
+    { $mul: { salary: 1.05 } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>2. Update the salary of the employee with id: 10 to increase it by 10%.</summary>
+        <pre>
+db.employee.updateOne(
+    { id: 10 },
+    { $mul: { salary: 1.10 } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>3. Set the minimum salary to 35000 for all employees in 'Engineering' with salary below this value.
+        </summary>
+        <pre>
+db.employee.updateMany(
+    { department: 'Engineering', salary: { $lt: 35000 } },
+    { $set: { salary: 35000 } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>4. Ensure salary of employee with id: 5 is not more than 32000.</summary>
+        <pre>
+db.employee.updateOne(
+    { id: 5, salary: { $gt: 32000 } },
+    { $set: { salary: 32000 } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>5. Remove the email field from all employees in the 'Marketing' department.</summary>
+        <pre>
+db.employee.updateMany(
+    { department: 'Marketing' },
+    { $unset: { email: "" } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>6. Double the salary of the employee with id: 3.</summary>
+        <pre>
+db.employee.updateOne(
+    { id: 3 },
+    { $mul: { salary: 2 } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>7. Rename field 'department' to 'division' for employee with id: 2.</summary>
+        <pre>
+db.employee.updateOne(
+    { id: 2 },
+    { $rename: { 'department': 'division' } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>8. Insert a new employee with id: 21 (Alexa) if not exists.</summary>
+        <pre>
+db.employee.updateOne(
+    { id: 21 },
+    { $setOnInsert: { id: 21, name: 'Alexa', gender: 'Female', salary: 55000, department: 'IT' } },
+    { upsert: true }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>9. Add 'projectAlpha' to a new array field 'projects' for employee with id: 4.</summary>
+        <pre>
+db.employee.updateOne(
+    { id: 4 },
+    { $push: { projects: 'projectAlpha' } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>10. Add multiple projects ('projectBeta', 'projectGamma') to 'projects' array for employee with id: 7.
+        </summary>
+        <pre>
+db.employee.updateOne(
+    { id: 7 },
+    { $push: { projects: { $each: ['projectBeta', 'projectGamma'] } } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>11. Remove the last project from 'projects' array for employee with id: 4.</summary>
+        <pre>
+db.employee.updateOne(
+    { id: 4 },
+    { $pop: { projects: 1 } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>12. Remove the first project from 'projects' array for employee with id: 7.</summary>
+        <pre>
+db.employee.updateOne(
+    { id: 7 },
+    { $pop: { projects: -1 } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>13. Remove 'projectBeta' from 'projects' array wherever it exists.</summary>
+        <pre>
+db.employee.updateMany(
+    { projects: 'projectBeta' },
+    { $pull: { projects: 'projectBeta' } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>14. Find the employee with id = 5.</summary>
+        <pre>db.employee.findOne({ id: 5 });</pre>
+    </details>
+
+    <details>
+        <summary>15. Find the employee whose department is exactly 'Business Development'.</summary>
+        <pre>db.employee.findOne({ department: 'Business Development' });</pre>
+    </details>
+
+    <details>
+        <summary>16. Find all employees whose gender is not 'Male'.</summary>
+        <pre>db.employee.find({ gender: { $ne: 'Male' } });</pre>
+    </details>
+
+    <details>
+        <summary>17. Find all documents where department is not 'Sales'.</summary>
+        <pre>db.employee.find({ department: { $ne: 'Sales' } });</pre>
+    </details>
+
+    <details>
+        <summary>18. Find all employees whose salary is greater than 50000.</summary>
+        <pre>db.employee.find({ salary: { $gt: 50000 } });</pre>
+    </details>
+
+    <details>
+        <summary>19. Find all employees with id greater than 15.</summary>
+        <pre>db.employee.find({ id: { $gt: 15 } });</pre>
+    </details>
+
+    <details>
+        <summary>20. Find all employees whose salary is greater than or equal to 80000.</summary>
+        <pre>db.employee.find({ salary: { $gte: 80000 } });</pre>
+    </details>
+
+</body>
+
+</html>

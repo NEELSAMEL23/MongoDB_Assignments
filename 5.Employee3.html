@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB Q&A</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f9f9f9;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        details {
+            margin-bottom: 12px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .link-box {
+            margin: 20px 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .link-box a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .link-box a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>MongoDB Practice Problems</h2>
+
+    <div class="link-box">
+        <p>
+            📌 Create a project named <strong>employeedb3</strong>.<br>
+            The collections of employees are provided in the links below:
+        </p>
+        <p>
+            🔗 <a href="https://drive.google.com/file/d/1DEaJCGd6Ki6r3ncU0S84N_jpgNK2l7qI/view?usp=sharing"
+                target="_blank">employee3_Collection</a><br>
+            🔗 <a href="https://drive.google.com/file/d/1uxKjmZWCxWGabHUOCBl17Auor0D1Pvey/view?usp=sharing"
+                target="_blank">department_Collection</a><br>
+            🔗 <a href="https://drive.google.com/file/d/1KFj7OdtEK2WffeIwQrq9ooUC896umUfo/view?usp=sharing"
+                target="_blank">office_Collection</a><br>
+            🔗 <a href="https://drive.google.com/file/d/1qV1squQ9XZDypXbmuZG_vADwrHkxHI4z/view?usp=sharing"
+                target="_blank">project_Collection</a><br>
+            🔗 <a href="https://drive.google.com/file/d/1aw6zPbAg5FJL69KW_C8Ufl8OPkVAlf1d/view?usp=sharing"
+                target="_blank">sales_Collection</a>
+        </p>
+    </div>
+
+    <details>
+        <summary>1. Most Popular Project (Highest Budget)</summary>
+        <pre>
+db.Projects.aggregate([
+  {
+    $lookup: {
+      from: "Departments",
+      localField: "department_id",
+      foreignField: "department_id",
+      as: "department"
+    }
+  },
+  {
+    $project: {
+      name: 1,
+      budget: 1,
+      department_name: { $arrayElemAt: ["$department.name", 0] }
+    }
+  },
+  {
+    $group: {
+      _id: "$department_name",
+      highestBudgetProject: { $max: "$budget" },
+      projectDetails: { $push: { name: "$name", budget: "$budget" } }
+    }
+  },
+  { $sort: { "highestBudgetProject": -1 } },
+  { $limit: 1 }
+])
+    </pre>
+    </details>
+
+
+    <details>
+        <summary>2. Employees in Engineering Department</summary>
+        <pre>
+db.Employees.find({ department: "Engineering" }).sort({ hire_date: 1 })
+    </pre>
+    </details>
+
+    <details>
+        <summary>3. Finance Department Projects</summary>
+        <pre>
+db.Projects.find({ department: "Finance" }).sort({ budget: -1 })
+    </pre>
+    </details>
+
+    <details>
+        <summary>4. Recent Sales by Finance Employees</summary>
+        <pre>
+db.Sales.find({
+  department: "Finance",
+  sale_date: { $gte: ISODate("2023-09-15") }
+}).sort({ sale_date: 1 })
+    </pre>
+    </details>
+
+    <details>
+        <summary>5. Project Details for Employee 'John Doe'</summary>
+        <pre>
+db.Projects.find({
+  "employees.name": "John Doe"
+}, {
+  name: 1,
+  budget: 1,
+  department: 1
+})
+    </pre>
+    </details>
+
+    <details>
+        <summary>6. Employees and Office Address for 'Payroll Software' Project</summary>
+        <pre>
+db.Employees.find({
+  "projects.name": "Payroll Software"
+}, {
+  name: 1,
+  office_address: 1
+})
+    </pre>
+    </details>
+
+    <details>
+        <summary>7. Detailed Sales Report for 'Engineering' Employees</summary>
+        <pre>
+db.Sales.aggregate([
+  {
+    $lookup: {
+      from: "Employees",
+      localField: "employee_id",
+      foreignField: "employee_id",
+      as: "employee"
+    }
+  },
+  { $unwind: "$employee" },
+  { $match: { "employee.department": "Engineering" } },
+  {
+    $project: {
+      employee_name: "$employee.name",
+      sale_amount: "$amount",
+      office_address: "$employee.office_address"
+    }
+  }
+])
+    </pre>
+    </details>
+
+    <details>
+        <summary>8. Top Selling Employees in Each Department</summary>
+        <pre>
+db.Sales.aggregate([
+  {
+    $group: {
+      _id: { department: "$department", employee: "$employee_id" },
+      totalSales: { $sum: "$amount" }
+    }
+  },
+  { $sort: { "_id.department": 1, "totalSales": -1 } },
+  {
+    $group: {
+      _id: "$_id.department",
+      topEmployee: { $first: "$_id.employee" },
+      topSales: { $first: "$totalSales" }
+    }
+  }
+])
+    </pre>
+    </details>
+
+    <details>
+        <summary>9. Average Salary by Department</summary>
+        <pre>
+db.Employees.aggregate([
+  {
+    $group: {
+      _id: "$department",
+      averageSalary: { $avg: "$salary" }
+    }
+  },
+  { $sort: { averageSalary: -1 } }
+])
+    </pre>
+    </details>
+
+    <details>
+        <summary>10. Most Involved Employees in Projects by Department</summary>
+        <pre>
+db.Employees.aggregate([
+  { $unwind: "$projects" },
+  {
+    $group: {
+      _id: { department: "$department", employee: "$name" },
+      projectCount: { $sum: 1 }
+    }
+  },
+  { $sort: { "_id.department": 1, "projectCount": -1 } },
+  {
+    $group: {
+      _id: "$_id.department",
+      employee: { $first: "$_id.employee" },
+      projectCount: { $first: "$projectCount" }
+    }
+  }
+])
+    </pre>
+    </details>
+    <details>
+        <summary>11. Employee and Department Information</summary>
+        <pre>
+db.Employees.aggregate([
+  {
+    $lookup: {
+      from: "Departments",
+      localField: "department_id",
+      foreignField: "department_id",
+      as: "department"
+    }
+  },
+  {
+    $project: {
+      name: 1,
+      age: 1,
+      department_name: { $arrayElemAt: ["$department.name", 0] }
+    }
+  }
+])
+    </pre>
+    </details>
+
+    <details>
+        <summary>12. Employee Projects Overview</summary>
+        <pre>
+db.Employees.aggregate([
+  {
+    $project: {
+      name: 1,
+      projects: "$projects.name"
+    }
+  }
+])
+    </pre>
+    </details>
+
+    <details>
+        <summary>13. Office Location of Employees</summary>
+        <pre>
+db.Employees.aggregate([
+  {
+    $lookup: {
+      from: "Offices",
+      localField: "office_id",
+      foreignField: "office_id",
+      as: "office"
+    }
+  },
+  {
+    $project: {
+      name: 1,
+      salary: 1,
+      office_address: { $arrayElemAt: ["$office.address", 0] }
+    }
+  }
+])
+    </pre>
+    </details>
+
+    <details>
+        <summary>14. Top Department by Employee Count</summary>
+        <pre>
+db.Employees.aggregate([
+  {
+    $group: {
+      _id: "$department_id",
+      employeeCount: { $sum: 1 }
+    }
+  },
+  {
+    $lookup: {
+      from: "Departments",
+      localField: "_id",
+      foreignField: "department_id",
+      as: "department"
+    }
+  },
+  {
+    $project: {
+      department_name: { $arrayElemAt: ["$department.name", 0] },
+      employeeCount: 1
+    }
+  },
+  { $sort: { employeeCount: -1 } },
+  { $limit: 1 }
+])
+    </pre>
+    </details>
+
+    <details>
+        <summary>15. Highest Sales by Employee</summary>
+        <pre>
+db.Sales.aggregate([
+  {
+    $group: {
+      _id: "$employee_id",
+      totalSales: { $sum: "$amount" }
+    }
+  },
+  {
+    $lookup: {
+      from: "Employees",
+      localField: "_id",
+      foreignField: "employee_id",
+      as: "employee"
+    }
+  },
+  {
+    $project: {
+      employee_name: { $arrayElemAt: ["$employee.name", 0] },
+      totalSales: 1
+    }
+  },
+  { $sort: { totalSales: -1 } },
+  { $limit: 1 }
+])
+    </pre>
+    </details>
+    <details>
+        <summary>16. Identifying High-Value Customers and Popular Products</summary>
+        <pre>
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "customers",
+      localField: "customer_id",
+      foreignField: "_id",
+      as: "customer_details"
+    }
+  },
+  {
+    $lookup: {
+      from: "products",
+      localField: "product_ids",
+      foreignField: "_id",
+      as: "product_details"
+    }
+  },
+  {
+    $addFields: {
+      total_order_value: { $sum: "$product_details.price" }
+    }
+  },
+  { $sort: { total_order_value: -1 } },
+  { $limit: 5 },
+  {
+    $project: {
+      order_date: 1,
+      customer_details: 1,
+      total_order_value: 1,
+      product_details: 1
+    }
+  }
+])
+    </pre>
+    </details>
+
+    <details>
+        <summary>17. Analyzing Product Release Trends</summary>
+        <pre>
+db.products.aggregate([
+  {
+    $match: {
+      release_date: {
+        $gte: new Date(new Date().setFullYear(new Date().getFullYear() - 5))
+      }
+    }
+  },
+  {
+    $group: {
+      _id: { year: { $year: "$release_date" }, month: { $month: "$release_date" } },
+      count: { $sum: 1 }
+    }
+  },
+  { $sort: { "_id.year": 1, "_id.month": 1 } }
+])
+    </pre>
+    </details>
+
+    <details>
+        <summary>18. Classifying Products into Price Ranges</summary>
+        <pre>
+db.products.aggregate([
+  {
+    $bucket: {
+      groupBy: "$price",
+      boundaries: [0, 50, 200, Infinity],
+      default: "Other",
+      output: {
+        count: { $sum: 1 },
+        products: { $push: "$$ROOT" }
+      }
+    }
+  }
+])
+    </pre>
+    </details>
+
+    <details>
+        <summary>19. Evaluating Supplier Performance</summary>
+        <pre>
+db.suppliers.aggregate([
+  {
+    $lookup: {
+      from: "products",
+      localField: "_id",
+      foreignField: "supplier_id",
+      as: "supplied_products"
+    }
+  },
+  {
+    $addFields: {
+      total_value: { $sum: "$supplied_products.price" }
+    }
+  },
+  {
+    $project: {
+      name: 1,
+      city: 1,
+      total_value: 1
+    }
+  },
+  { $sort: { total_value: -1 } }
+])
+    </pre>
+    </details>
+
+    <details>
+        <summary>20. Assessing Customer Registration Trends</summary>
+        <pre>
+db.customers.aggregate([
+  {
+    $match: {
+      registration_date: {
+        $gte: new Date(new Date().setFullYear(new Date().getFullYear() - 2))
+      }
+    }
+  },
+  {
+    $group: {
+      _id: { year: { $year: "$registration_date" }, month: { $month: "$registration_date" } },
+      count: { $sum: 1 }
+    }
+  },
+  { $sort: { "_id.year": 1, "_id.month": 1 } }
+])
+    </pre>
+    </details>
+
+    <details>
+        <summary>21. Tracking Order Fulfillment Times</summary>
+        <pre>
+db.orders.aggregate([
+  {
+    $match: {
+      order_date: {
+        $gte: new Date(new Date().setFullYear(new Date().getFullYear() - 2))
+      }
+    }
+  },
+  {
+    $addFields: {
+      fulfillment_time: { $subtract: ["$fulfillment_date", "$order_date"] }
+    }
+  },
+  {
+    $group: {
+      _id: null,
+      average_fulfillment_time: { $avg: "$fulfillment_time" }
+    }
+  }
+])
+    </pre>
+    </details>
+
+    <details>
+        <summary>22. Investigating Product Popularity by Category</summary>
+        <pre>
+db.products.aggregate([
+  {
+    $lookup: {
+      from: "orders",
+      localField: "_id",
+      foreignField: "product_ids",
+      as: "order_details"
+    }
+  },
+  { $unwind: "$order_details" },
+  {
+    $group: {
+      _id: "$category",
+      total_quantity_sold: { $sum: "$order_details.quantity" }
+    }
+  },
+  { $sort: { total_quantity_sold: -1 } }
+])
+    </pre>
+    </details>
+
+</body>
+
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB Q&A</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f9f9f9;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        details {
+            margin-bottom: 12px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .link-box {
+            margin: 20px 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .link-box a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .link-box a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>MongoDB Practice Problems</h2>
+
+    <div class="link-box">
+        <p>
+            📌 Create a project named <strong>employeedb</strong>.
+            The collection of employees is provided in the link below:
+        </p>
+        <p>
+            🔗 <a href="https://drive.google.com/file/d/1fYWkcL867jJ8L3MbTuGpNcC94rtaOxcK/view?usp=sharing"
+                target="_blank">
+                Students Collection (Download Here)
+            </a>
+        </p>
+    </div>
+
+    <details>
+        <summary>1. How do you list all the databases present in your MongoDB server?</summary>
+        <pre>show dbs</pre>
+    </details>
+
+    <details>
+        <summary>2. What command is used to create or switch to a database in MongoDB?</summary>
+        <pre>use companydb</pre>
+    </details>
+
+    <details>
+        <summary>3. How can you create a collection named "students" in your MongoDB database?</summary>
+        <pre>db.createCollection("students")</pre>
+    </details>
+
+    <details>
+        <summary>4. Insert a single document into "students" with name, age, and course.</summary>
+        <pre>db.students.insertOne({ name: "John Doe", age: 21, course: "Data Science" })</pre>
+    </details>
+
+    <details>
+        <summary>5. Insert multiple documents into "students".</summary>
+        <pre>
+db.students.insertMany([
+  { name: "John Doe", age: 21, course: "Data Science" },
+  { name: "Jane Smith", age: 22, course: "Computer Science" },
+  { name: "Alice Johnson", age: 23, course: "Information Technology" }
+])
+    </pre>
+    </details>
+
+    <details>
+        <summary>6. Find all documents in "students".</summary>
+        <pre>db.students.find()</pre>
+    </details>
+
+    <details>
+        <summary>7. Find the first document in "students".</summary>
+        <pre>db.students.findOne()</pre>
+    </details>
+
+    <details>
+        <summary>8. Update John Doe’s course to "Data Science".</summary>
+        <pre>
+db.students.updateOne(
+  { name: "John Doe" },
+  { $set: { course: "Data Science" } }
+)
+    </pre>
+    </details>
+
+    <details>
+        <summary>9. Increment age of all students by 1.</summary>
+        <pre>
+db.students.updateMany(
+  {},
+  { $inc: { age: 1 } }
+)
+    </pre>
+    </details>
+
+    <details>
+        <summary>10. Delete John Doe’s record.</summary>
+        <pre>db.students.deleteOne({ name: "John Doe" })</pre>
+    </details>
+
+    <details>
+        <summary>11. Delete all students with age >= 22.</summary>
+        <pre>db.students.deleteMany({ age: { $gte: 22 } })</pre>
+    </details>
+
+    <details>
+        <summary>12. Find all students in "Data Science" course.</summary>
+        <pre>db.students.find({ course: "Data Science" })</pre>
+    </details>
+
+    <!-- New Employee Problems Start -->
+
+    <details>
+        <summary>13. Retrieve all documents from the employee collection.</summary>
+        <pre>db.employee.find({});</pre>
+    </details>
+
+    <details>
+        <summary>14. Retrieve the first document from the employee collection.</summary>
+        <pre>db.employee.findOne({});</pre>
+    </details>
+
+    <details>
+        <summary>15. Update the age of the employee to 35 where the first name is "Sidnee".</summary>
+        <pre>
+db.employee.updateOne(
+   { first_name: "Sidnee" },
+   { $set: { age: 35 } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>16. Change the salary of "Meredeth Groveham" to 55000.</summary>
+        <pre>
+db.employee.updateOne(
+   { first_name: "Meredeth", last_name: "Groveham" },
+   { $set: { salary: 55000 } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>17. Update the last name of "Nikolaus" to "Park".</summary>
+        <pre>
+db.employee.updateOne(
+   { first_name: "Nikolaus" },
+   { $set: { last_name: "Park" } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>18. Update the salary of all employees to 35000 where the age is 37.</summary>
+        <pre>
+db.employee.updateMany(
+   { age: 37 },
+   { $set: { salary: 35000 } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>19. Update the last name of all employees to "Jamme" where the age is 28.</summary>
+        <pre>
+db.employee.updateMany(
+   { age: 28 },
+   { $set: { last_name: "Jamme" } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>20. For all employees named "Kimbra," add a new field middle_name with the value "Marie".</summary>
+        <pre>
+db.employee.updateMany(
+   { first_name: "Kimbra" },
+   { $set: { middle_name: "Marie" } }
+);
+    </pre>
+    </details>
+
+    <details>
+        <summary>21. Find all users who are 33 years old.</summary>
+        <pre>db.employee.find({ age: 33 });</pre>
+    </details>
+
+    <details>
+        <summary>22. Retrieve documents for users with a salary greater than 50000.</summary>
+        <pre>db.employee.find({ salary: { $gt: 50000 } });</pre>
+    </details>
+
+    <details>
+        <summary>23. Find all users where the gender is Female and age is 79.</summary>
+        <pre>db.employee.find({ gender: "Female", age: 79 });</pre>
+    </details>
+
+    <details>
+        <summary>24. Find all employees where the first name is "George" and gender is Male.</summary>
+        <pre>db.employee.find({ first_name: "George", gender: "Male" });</pre>
+    </details>
+
+    <details>
+        <summary>25. Find all users whose salary is less than or equal to 50000.</summary>
+        <pre>db.employee.find({ salary: { $lte: 50000 } });</pre>
+    </details>
+
+    <!-- New Employee Problems End -->
+
+</body>
+
+</html>

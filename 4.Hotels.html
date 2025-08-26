@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB Practice – Hotels</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f4f6f9;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        details {
+            margin: 12px 0;
+            background: #fff;
+            border-radius: 8px;
+            padding: 10px 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        summary {
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-top: 8px;
+        }
+
+        code {
+            font-family: Consolas, monospace;
+        }
+
+        .link-box {
+            margin: 20px 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .link-box a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .link-box a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>MongoDB Practice – Oyo_Hotels</h1>
+
+    <div class="link-box">
+        <p>
+            📌 Create a project named <strong>Oyo_Hotels</strong>.
+            The collection of hotels is provided in the link below:
+        </p>
+        <p>
+            🔗 <a href="https://drive.google.com/file/d/1e9b8DMebW-OzlHbC5svdLe_b0AmIMvr2/view?usp=sharing"
+                target="_blank">
+                hotels Collection (Download Here)
+            </a>
+        </p>
+    </div>
+
+    <details>
+        <summary>1. Find the number of hotels with a rating of 4 or higher.</summary>
+        <pre><code>db.hotels.find({ RATING: { $gte: 4 } });</code></pre>
+    </details>
+
+    <details>
+        <summary>2. Retrieve the names and addresses of the first 5 hotels sorted by final cost in ascending order.
+        </summary>
+        <pre><code>db.hotels.find({}, { Name: 1, ADDRESS: 1, _id: 0 }).sort({ FINAL_COST: 1 }).limit(5);</code></pre>
+    </details>
+
+    <details>
+        <summary>3. Skip the first 10 hotels, then retrieve the next 5 hotels, sorted by rating in descending order.
+        </summary>
+        <pre><code>db.hotels.find({}, { name: 1, rating: 1, _id: 0 }).sort({ rating: -1 }).skip(10).limit(5);</code></pre>
+    </details>
+
+    <details>
+        <summary>4. Find the names and ratings of hotels, sort them in descending order of ratings, and limit the
+            results to 10.</summary>
+        <pre><code>db.hotels.find({}, { name: 1, rating: 1, _id: 0 }).sort({ rating: -1 }).limit(10);</code></pre>
+    </details>
+
+    <details>
+        <summary>5. Retrieve only the names and addresses of all hotels.</summary>
+        <pre><code>db.hotels.find({}, { name: 1, address: 1, _id: 0 });</code></pre>
+    </details>
+
+    <details>
+        <summary>6. Retrieve a list of amenities and room sizes, excluding hotel IDs.</summary>
+        <pre><code>db.hotels.find({}, { amenities: 1, roomSize: 1, _id: 0 });</code></pre>
+    </details>
+
+    <details>
+        <summary>7. Display only the final cost and category for all hotels.</summary>
+        <pre><code>db.hotels.find({}, { finalCost: 1, category: 1, _id: 0 });</code></pre>
+    </details>
+
+    <details>
+        <summary>8. List the names of hotels along with their images.</summary>
+        <pre><code>db.hotels.find({}, { name: 1, image: 1, _id: 0 });</code></pre>
+    </details>
+
+    <details>
+        <summary>9. Retrieve hotels where the final cost exceeds the base cost by at least 100.</summary>
+        <pre><code>db.hotels.find({
+  $expr: { $gte: [{ $subtract: ["$finalCost", "$baseCost"] }, 100] }
+});</code></pre>
+    </details>
+
+    <details>
+        <summary>10. Retrieve hotels where the number of amenities is exactly 3.</summary>
+        <pre><code>db.hotels.find({
+  "amenities.3": { $exists: false },
+  "amenities.2": { $exists: true }
+});</code></pre>
+    </details>
+
+    <details>
+        <summary>11. Find hotels that offer both "WiFi" and "AC" amenities.</summary>
+        <pre><code>db.hotels.find({ amenities: { $all: ["WiFi", "AC"] } });</code></pre>
+    </details>
+
+    <details>
+        <summary>12. Retrieve hotels that offer either "TV" or "AC" amenities.</summary>
+        <pre><code>db.hotels.find({ amenities: { $in: ["TV", "AC"] } });</code></pre>
+    </details>
+
+    <details>
+        <summary>13. Retrieve hotels with a rating of 5.</summary>
+        <pre><code>db.hotels.find({ rating: 5 });</code></pre>
+    </details>
+
+    <details>
+        <summary>14. Retrieve hotels located in "Telangana."</summary>
+        <pre><code>db.hotels.find({ location: "Telangana" });</code></pre>
+    </details>
+
+    <details>
+        <summary>15. Limit retrieval to the first 3 hotels.</summary>
+        <pre><code>db.hotels.find().limit(3);</code></pre>
+    </details>
+
+    <details>
+        <summary>16. Retrieve the 2 highest-rated hotels.</summary>
+        <pre><code>db.hotels.find().sort({ rating: -1 }).limit(2);</code></pre>
+    </details>
+
+    <details>
+        <summary>17. Sort hotels by base cost in descending order.</summary>
+        <pre><code>db.hotels.find().sort({ baseCost: -1 });</code></pre>
+    </details>
+
+    <details>
+        <summary>18. Sort hotels alphabetically by name.</summary>
+        <pre><code>db.hotels.find().sort({ name: 1 });</code></pre>
+    </details>
+
+    <details>
+        <summary>19. Skip the top 5 hotels based on rating.</summary>
+        <pre><code>db.hotels.find().sort({ rating: -1 }).skip(5);</code></pre>
+    </details>
+
+    <details>
+        <summary>20. Skip the first 2 hotels when displaying results.</summary>
+        <pre><code>db.hotels.find().skip(2);</code></pre>
+    </details>
+
+    <!-- Continuing Hotels Queries from Q21 -->
+
+    <details>
+        <summary>21. Group all documents to count the total number of hotels.</summary>
+        <pre><code>db.hotels.count()</code></pre>
+    </details>
+
+    <details>
+        <summary>22. Group by CATEGORY to count the number of hotels in each category.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $group: { _id: "$CATEGORY", NumberOfHotels: { $sum: 1 } } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>23. Group hotels by CATEGORY and list all hotel names within each category.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $group: { _id: "$CATEGORY", HotelNames: { $push: "$NAME" } } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>24. Group hotels by CATEGORY and include the full document for each hotel using $$ROOT.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $group: { _id: "$CATEGORY", Hotels: { $push: "$$ROOT" } } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>25. Count number of hotels in each category (same as Q22 but explicitly with $sum).</summary>
+        <pre><code>db.hotels.aggregate([
+  { $group: { _id: "$CATEGORY", NumberOfHotels: { $sum: 1 } } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>26. Find the maximum, minimum, and average room size across all hotels.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $group: {
+      _id: null,
+      maxRoomSize: { $max: "$ROOM_SIZE" },
+      minRoomSize: { $min: "$ROOM_SIZE" },
+      avgRoomSize: { $avg: "$ROOM_SIZE" }
+  }}
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>27. Find the hotel with the highest rating in each category.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $sort: { RATING: -1 } },
+  { $group: { _id: "$CATEGORY", topHotel: { $first: "$$ROOT" } } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>28. Use $project to include NAME, RATING, and cost difference.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $project: {
+      NAME: 1,
+      RATING: 1,
+      costDifference: { $subtract: ["$FINAL_COST", "$BASE_COST"] }
+  }}
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>29. Expand IMAGES array using $unwind.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $unwind: "$IMAGES" }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>30. Add a new field onboardStatus with value true.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $addFields: { onboardStatus: true } }
+])</code></pre>
+    </details>
+
+    <!-- Q2 Aggregations -->
+
+    <details>
+        <summary>31. Find the average RATING across all hotels.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $group: { _id: null, avgRating: { $avg: "$RATING" } } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>32. Group by RATING to count how many hotels have the same RATING.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $group: { _id: "$RATING", hotelCount: { $sum: 1 } } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>33. Group by RATING and list all addresses for each rating.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $group: { _id: "$RATING", hotelAddresses: { $push: "$ADDRESS" } } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>34. Group by RATING and include all hotel details.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $group: { _id: "$RATING", hotelDetails: { $push: "$$ROOT" } } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>35. Group hotels by RATING and count how many hotels at each level.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $group: { _id: "$RATING", hotelCount: { $sum: 1 } } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>36. Find max, min, and avg FINAL_COST of hotels grouped by CATEGORY.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $group: {
+      _id: "$CATEGORY",
+      maxFinalCost: { $max: "$FINAL_COST" },
+      minFinalCost: { $min: "$FINAL_COST" },
+      avgFinalCost: { $avg: "$FINAL_COST" }
+  }}
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>37. Group by RATING and calculate max, min, avg BASE_COST.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $group: {
+      _id: "$RATING",
+      maxBaseCost: { $max: "$BASE_COST" },
+      minBaseCost: { $min: "$BASE_COST" },
+      avgBaseCost: { $avg: "$BASE_COST" }
+  }}
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>38. Show only NAME, ADDRESS, and FINAL_COST of each hotel.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $project: { NAME: 1, ADDRESS: 1, FINAL_COST: 1 } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>39. Separate each amenities item into a new document.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $unwind: "$AMENITIES" }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>40. Add a field DISCOUNT showing FINAL_COST - BASE_COST.</summary>
+        <pre><code>db.hotels.aggregate([
+  { $addFields: { discount: { $subtract: ["$FINAL_COST", "$BASE_COST"] } } }
+])</code></pre>
+    </details>
+    <!-- Continuing Queries from Q41 -->
+
+    <details>
+        <summary>41. Retrieve buyers from CA state who are located in either Los Angeles or San Francisco.</summary>
+        <pre><code>db.buyers.aggregate([
+  { $match: { state: "CA", city: { $in: ["Los Angeles", "San Francisco"] } } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>42. Count the number of orders placed through each Payment Method. Print PaymentID and count, sorted by
+            PaymentID.</summary>
+        <pre><code>db.orders.aggregate([
+  { $group: { _id: "$PaymentID", orderCount: { $sum: 1 } } },
+  { $sort: { _id: 1 } },
+  { $project: { _id: 0, PaymentID: "$_id", NumberOfOrders: "$orderCount" } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>43. Get the minimum Sale Price of products for each Sub Category (alphabetical order).</summary>
+        <pre><code>db.products.aggregate([
+  { $group: { _id: "$Sub_Category", minSalePrice: { $min: "$Sale_Price" } } },
+  { $sort: { _id: 1 } },
+  { $project: { _id: 0, SubCategory: "$_id", MinSalePrice: "$minSalePrice" } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>44. Get the number of customers from each city, sorted in reverse alphabetical order.</summary>
+        <pre><code>db.customers.aggregate([
+  { $group: { _id: "$City", customerCount: { $sum: 1 } } },
+  { $sort: { _id: -1 } },
+  { $project: { _id: 0, City: "$_id", NumberOfCustomers: "$customerCount" } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>45. Find the city with the longest name and its length.</summary>
+        <pre><code>db.customers.aggregate([
+  { $project: { _id: 0, City: 1, nameLength: { $strLenCP: "$City" } } },
+  { $sort: { nameLength: -1 } },
+  { $limit: 1 }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>46. Get average Market Price across combinations of each Brand and Type.</summary>
+        <pre><code>db.products.aggregate([
+  { $group: { _id: { Brand: "$Brand", Type: "$Type" }, avgMarketPrice: { $avg: "$Market_Price" } } },
+  { $sort: { "_id.Brand": 1, "_id.Type": 1 } },
+  { $project: { _id: 0, Brand: "$_id.Brand", Type: "$_id.Type", avgMarketPrice: 1 } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>47. Find the number of customers in each city-state combination (sorted alphabetically).</summary>
+        <pre><code>db.customers.aggregate([
+  { $group: { _id: { City: "$City", State: "$State" }, customerCount: { $sum: 1 } } },
+  { $sort: { "_id.City": 1, "_id.State": 1 } },
+  { $project: { _id: 0, City: "$_id.City", State: "$_id.State", NumberOfCustomers: "$customerCount" } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>48. Find customers whose first name does not start with H but last name starts with W.</summary>
+        <pre><code>db.customers.aggregate([
+  { $match: { FirstName: { $not: /^H/ }, LastName: /^W/ } },
+  { $sort: { CustomerID: 1 } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>49. Calculate the average score for each grade category across all restaurants.</summary>
+        <pre><code>db.restaurants.aggregate([
+  { $unwind: "$grades" },
+  { $group: { _id: "$grades.grade", averageScore: { $avg: "$grades.score" } } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>50. Print all details of orders placed on 8th August 2021, sorted by OrderID descending.</summary>
+        <pre><code>db.orders.find({ OrderDate: "2021-08-08" }).sort({ OrderID: -1 })</code></pre>
+    </details>
+
+    <details>
+        <summary>51. Retrieve orders grouped by customer_id with total sum.</summary>
+        <pre><code>db.orders.aggregate([
+  { $group: { _id: "$customer_id", Total: { $sum: "$price" } } }
+])</code></pre>
+    </details>
+
+    <details>
+        <summary>52. Retrieve orders grouped by customer_id with minimum total.</summary>
+        <pre><code>db.orders.aggregate([
+  { $group: { _id: "$customer_id", minTotal: { $min: "$price" } } }
+])</code></pre>
+    </details>
+
+</body>
+
+</html>

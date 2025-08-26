@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB Q&A</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f9f9f9;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        details {
+            margin-bottom: 12px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .link-box {
+            margin: 20px 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .link-box a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .link-box a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>MongoDB Practice Problems</h2>
+
+    <div class="link-box">
+        <p>
+            📌 Create a project named <strong>Social_App</strong>.<br>
+            The collection of employees is provided in the link below:
+        </p>
+        <p>Social App Collections (Download Here)</p>
+        <p>
+            🔗 <a href="https://drive.google.com/file/d/1_YjY6tpOn6-ez-_f607hoYFhJf90pCMW/view?usp=sharing"
+                target="_blank">User_Collection</a>
+            🔗 <a href="https://drive.google.com/file/d/1wooBHGxkD6cMtyQoHDsWUs1JkGErWy33/view?usp=sharing"
+                target="_blank">Analytics_Collection</a>
+            🔗 <a href="https://drive.google.com/file/d/1EpiYEB732xylCoPx9lZkLkgsL0HBZws6/view?usp=sharing"
+                target="_blank">Video_Collection</a>
+            🔗 <a href="https://drive.google.com/file/d/1SONcuvOcbQyDaT8duOaWhREkrP5ztWQO/view?usp=sharing"
+                target="_blank">Comment_Collection</a>
+            🔗 <a href="https://drive.google.com/file/d/1U3pHvr4WcTOlsJ87L67JTA6kTzCAiqmp/view?usp=sharing"
+                target="_blank">Channel_collection</a>
+        </p>
+    </div>
+    <details>
+        <summary>1. Find all videos uploaded after March 1, 2024.</summary>
+        <pre>
+db.videos.find({ uploadDate: { $gt: new ISODate("2024-03-01") } }).forEach(printjson);
+        </pre>
+    </details>
+
+    <details>
+        <summary>2. Retrieve all users who joined before 2024.</summary>
+        <pre>
+db.users.find({ joinDate: { $lt: new ISODate("2024-01-01") } }).forEach(printjson);
+        </pre>
+    </details>
+
+    <details>
+        <summary>3. Get all comments made on April 1, 2024.</summary>
+        <pre>
+db.comments.find({ commentDate: { $gte: new ISODate("2024-04-01"), $lt: new ISODate("2024-04-02") } }).forEach(printjson);
+        </pre>
+    </details>
+
+    <details>
+        <summary>4. List all videos with more likes than dislikes.</summary>
+        <pre>
+db.videos.find({ $expr: { $gt: ["$likes", "$dislikes"] } }).forEach(printjson);
+        </pre>
+    </details>
+
+    <details>
+        <summary>5. Fetch all channels with more than 1000 subscribers.</summary>
+        <pre>
+db.channels.find({ subscribers: { $gt: 1000 } }).forEach(printjson);
+        </pre>
+    </details>
+
+    <details>
+        <summary>6. Find videos tagged with "Tutorial".</summary>
+        <pre>
+db.videos.find({ tags: "Tutorial" }).forEach(printjson);
+        </pre>
+    </details>
+
+    <details>
+        <summary>7. Retrieve user details of those who have subscribed to "ch1".</summary>
+        <pre>
+db.users.find({ subscriptions: "ch1" }).forEach(printjson);
+        </pre>
+    </details>
+
+    <details>
+        <summary>8. Get all comments with more than 5 likes.</summary>
+        <pre>
+db.comments.find({ likes: { $gt: 5 } }).forEach(printjson);
+        </pre>
+    </details>
+
+    <details>
+        <summary>9. Find all videos from the "Tech Tutorials" channel.</summary>
+        <pre>
+db.videos.find({ channelName: "Tech Tutorials" }).forEach(printjson);
+        </pre>
+    </details>
+
+    <details>
+        <summary>10. List users who have subscribed to more than one channel.</summary>
+        <pre>
+db.users.find({ $expr: { $gt: [{ $size: "$subscriptions" }, 1] } }).forEach(printjson);
+        </pre>
+    </details>
+
+    <details>
+        <summary>11. Calculate the average likes for videos in each channel.</summary>
+        <pre>
+db.videos.aggregate([
+    {
+        $group: {
+            _id: "$channelName",
+            avgLikes: { $avg: "$likes" }
+        }
+    }
+]).forEach(printjson);
+        </pre>
+    </details>
+
+    <details>
+        <summary>12. Aggregate comments to show which video has the most engaged audience (most comments).</summary>
+        <pre>
+db.comments.aggregate([
+    {
+        $group: {
+            _id: "$videoId",
+            commentCount: { $sum: 1 }
+        }
+    },
+    { $sort: { commentCount: -1 } },
+    { $limit: 1 }
+]).forEach(printjson);
+        </pre>
+    </details>
+
+    <details>
+        <summary>13. Find all users and the titles of videos they’ve commented on.</summary>
+        <pre>
+db.videos.aggregate([
+  { $unwind: "$comments" },
+  { $group: { _id: "$comments.user", videos: { $addToSet: "$title" } } },
+  { $project: { user: "$_id", videos: 1, _id: 0 } }
+])</pre>
+    </details>
+
+    <details>
+        <summary>14. Calculate the average likes of comments for each video, including the video title.</summary>
+        <pre>
+db.videos.aggregate([
+  { $unwind: "$comments" },
+  { $group: { _id: "$title", avgLikes: { $avg: "$comments.likes" } } },
+  { $project: { title: "$_id", avgLikes: 1, _id: 0 } }
+])</pre>
+    </details>
+
+    <details>
+        <summary>15. List each channel and its total number of comments across all videos.</summary>
+        <pre>
+db.videos.aggregate([
+  { $unwind: "$comments" },
+  { $group: { _id: "$channel", totalComments: { $sum: 1 } } },
+  { $project: { channel: "$_id", totalComments: 1, _id: 0 } }
+])</pre>
+    </details>
+
+    <details>
+        <summary>16. For each video, find the top commenter based on the number of likes received on their comments.
+        </summary>
+        <pre>
+db.videos.aggregate([
+  { $unwind: "$comments" },
+  { $group: { _id: { title: "$title", user: "$comments.user" }, totalLikes: { $sum: "$comments.likes" } } },
+  { $sort: { "_id.title": 1, totalLikes: -1 } },
+  { $group: { _id: "$_id.title", topCommenter: { $first: "$_id.user" }, likes: { $first: "$totalLikes" } } },
+  { $project: { title: "$_id", topCommenter: 1, likes: 1, _id: 0 } }
+])</pre>
+    </details>
+
+    <details>
+        <summary>17. Aggregate total views per channel, including the channel name.</summary>
+        <pre>
+db.videos.aggregate([
+  { $group: { _id: "$channel", totalViews: { $sum: "$views" } } },
+  { $project: { channel: "$_id", totalViews: 1, _id: 0 } }
+])</pre>
+    </details>
+
+    <details>
+        <summary>18. Find all videos with their corresponding watch duration and total likes on comments.</summary>
+        <pre>
+db.videos.aggregate([
+  { $unwind: "$comments" },
+  { $group: { _id: "$title", duration: { $first: "$duration" }, totalCommentLikes: { $sum: "$comments.likes" } } },
+  { $project: { title: "$_id", duration: 1, totalCommentLikes: 1, _id: 0 } }
+])</pre>
+    </details>
+
+    <details>
+        <summary>19. Generate a report for "Tech Tutorials" including titles, views, likes, dislikes, and top three
+            comments.</summary>
+        <pre>
+db.videos.aggregate([
+  { $match: { channel: "Tech Tutorials" } },
+  { $project: {
+      title: 1,
+      views: 1,
+      likes: 1,
+      dislikes: 1,
+      topComments: { $slice: { $sortArray: { input: "$comments", sortBy: { likes: -1 } }, n: 3 } }
+  } }
+])</pre>
+    </details>
+
+    <details>
+        <summary>20. List users subscribed to "Tech Tutorials" and their subscription dates.</summary>
+        <pre>
+db.subscriptions.aggregate([
+  { $match: { channel: "Tech Tutorials" } },
+  { $project: { user: 1, subscriptionDate: "$date", _id: 0 } }
+])</pre>
+    </details>
+
+    <details>
+        <summary>21. Detailed breakdown of "Introduction to MongoDB" views by country.</summary>
+        <pre>
+db.videos.aggregate([
+  { $match: { title: "Introduction to MongoDB" } },
+  { $unwind: "$viewsByCountry" },
+  { $project: { country: "$viewsByCountry.country", views: "$viewsByCountry.views", _id: 0 } }
+])</pre>
+    </details>
+
+    <details>
+        <summary>22. Summary of user interactions for a specific user.</summary>
+        <pre>
+db.users.aggregate([
+  { $match: { user: "specific_user" } },
+  { $project: { comments: 1, likedVideos: 1, subscribedChannels: 1, _id: 0 } }
+])</pre>
+    </details>
+
+    <details>
+        <summary>23. Report for "Introduction to MongoDB" with views, likes, dislikes, top 5 comments, and breakdown by
+            country.</summary>
+        <pre>
+db.videos.aggregate([
+  { $match: { title: "Introduction to MongoDB" } },
+  { $project: {
+      title: 1,
+      views: 1,
+      likes: 1,
+      dislikes: 1,
+      topComments: { $slice: { $sortArray: { input: "$comments", sortBy: { likes: -1 } }, n: 5 } },
+      viewsByCountry: 1
+  } }
+])</pre>
+    </details>
+
+    <details>
+        <summary>24. Generate a monthly performance report for "Tech Tutorials".</summary>
+        <pre>
+db.videos.aggregate([
+  { $match: { channel: "Tech Tutorials" } },
+  { $group: {
+      _id: { month: { $month: "$upload_date" }, year: { $year: "$upload_date" } },
+      totalViews: { $sum: "$views" },
+      totalLikes: { $sum: "$likes" },
+      newVideos: { $sum: 1 }
+  } },
+  { $project: {
+      month: "$_id.month",
+      year: "$_id.year",
+      totalViews: 1,
+      totalLikes: 1,
+      newVideos: 1,
+      _id: 0
+  } }
+])</pre>
+    </details>
+
+    <details>
+        <summary>25. Analyze user interactions for "Introduction to MongoDB".</summary>
+        <pre>
+db.videos.aggregate([
+  { $match: { title: "Introduction to MongoDB" } },
+  { $unwind: "$comments" },
+  { $group: {
+      _id: "$title",
+      totalComments: { $sum: 1 },
+      totalReplies: { $sum: { $size: "$comments.replies" } },
+      avgLikes: { $avg: "$comments.likes" }
+  } },
+  { $project: { title: "$_id", totalComments: 1, totalReplies: 1, avgLikes: 1, _id: 0 } }
+])</pre>
+    </details>
+
+
+</body>
+
+</html>
