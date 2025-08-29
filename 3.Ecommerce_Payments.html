@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB Practice – Payments & Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f4f6f9;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        details {
+            margin: 12px 0;
+            background: #fff;
+            border-radius: 8px;
+            padding: 10px 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        summary {
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-top: 8px;
+        }
+
+        code {
+            font-family: Consolas, monospace;
+        }
+
+        .link-box {
+            margin: 20px 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .link-box a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .link-box a:hover {
+            text-decoration: underline;
+        }
+
+        .schema-box {
+            margin: 20px 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .schema-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>MongoDB Practice – Ecommerce_Payment</h1>
+
+    <div class="link-box">
+        <p>
+            📌 Create a project named <strong>Ecommerce_Payment</strong>.<br>
+            The collection of employees is provided in the link below:
+        </p>
+        <p>Ecommerce_Payment Collections (Download Here)</p>
+        <p>
+            🔗 <a href="https://drive.google.com/file/d/1ofLfeKQiBBtfy_omeXYu11M6mwV0MWs2/view?usp=sharing"
+                target="_blank">Buyers_Collection</a>
+            🔗 <a href="https://drive.google.com/file/d/1n5FJ5KWUfrlSCU7FDfHknvO4-_7uQU0u/view?usp=sharing"
+                target="_blank">Orders_Collection</a>
+            🔗 <a href="https://drive.google.com/file/d/1Fo0tZLiP2KntLdVJcD88b7qdD96BwTye/view?usp=sharing"
+                target="_blank">Products_Collection</a>
+            🔗 <a href="https://drive.google.com/file/d/1FdOshGzR5bFA38ARiOHdt8GY5KtEylAn/view?usp=sharing"
+                target="_blank">Payments_Collection</a>
+            🔗 <a href="https://drive.google.com/file/d/1hn9_vxPd10Nq_MbOz4GufCjNC8UwZSO-/view?usp=drive_link"
+                target="_blank">Categories_collection</a>
+            🔗 <a href="https://drive.google.com/file/d/1haU69wr4kuVHXU_CakvGS7oVkxxmCiyL/view?usp=sharing"
+                target="_blank">Orders_details_collection</a>
+            🔗 <a href="https://drive.google.com/file/d/1uSiFWV1qlg3XbdLWs6A_GxLJavSEYkZc/view?usp=sharing"
+                target="_blank">Shippers_collection</a> <br> <br>
+            🔗 <a href="https://drive.google.com/file/d/1QqMzo4i4r4QlMXX1hUUJeH7G8Tsk_tBG/view?usp=sharing"
+                target="_blank">Suppliers_collection</a>
+        </p>
+    </div>
+
+
+    <!-- Queries start here -->
+
+    <details>
+        <summary>1. Write Mongo query to retrieve the documents from the payments collection where payment status is
+            either null or pending?</summary>
+        <pre><code>db.payments.find({
+  "paymentStatus": { $in: [null, "pending"] }
+})</code></pre>
+    </details>
+
+    <details>
+        <summary>2. Write Mongo query to find a buyer with the name John Smith and the email john@hotmail.com</summary>
+        <pre><code>db.buyers.findOne({
+  "name": "John Smith",
+  "email": "john@hotmail.com"
+});</code></pre>
+    </details>
+
+    <details>
+        <summary>3. Find all Trips?</summary>
+        <pre><code>db.Description.find({
+  trip: { $exists: true }
+})</code></pre>
+    </details>
+
+    <details>
+        <summary>4. Write Mongo query to retrieve the documents from the payments collection without a payment date?
+        </summary>
+        <pre><code>db.payments.find({
+  "payments_date": { $eq: null }
+});</code></pre>
+    </details>
+
+
+
+    <details>
+        <summary>6. Write Mongo query to find a product with a price greater than or equal to 1500?</summary>
+        <pre><code>db.order_details.findOne({
+  price: { $gte: 1500 }
+});</code></pre>
+    </details>
+
+    <details>
+        <summary>7. Write Mongo query to retrieve all the orders that shipped before 2022-05-26</summary>
+        <pre><code>db.order.find({
+  "ship_date": { $lt: "2022-05-26" }
+});</code></pre>
+    </details>
+
+    <details>
+        <summary>8. Print all details of orders whose Total Order Amount is greater than 5000?</summary>
+        <pre><code>db.orders.find({
+  "Total_order_amount": { $gt: 5000 }
+});</code></pre>
+    </details>
+
+    <details>
+        <summary>9. Write Mongo query to retrieve the documents from the payments collection with a non-null
+            payment_date?</summary>
+        <pre><code>db.payments.find({
+  paymentDate: { $ne: null }
+});</code></pre>
+    </details>
+
+    <details>
+        <summary>10. Write Mongo query to find the total number of orders shipped?</summary>
+        <pre><code>db.orders.aggregate([
+  { $match: { "status": "shipped" } },
+  { $count: "total_shipped_orders" }
+]);</code></pre>
+    </details>
+
+    <details>
+        <summary>11. Write Mongo query to find first order with customer ID 2 in orders collection?</summary>
+        <pre><code>db.orders.findOne({
+  "customer_id": 2
+});</code></pre>
+    </details>
+
+    <details>
+        <summary>12. Write Mongo query to retrieve the documents from the payments collection with their paymentMethod?
+        </summary>
+        <pre><code>db.payments.find(
+  {},
+  { "paymentMethod": 1, _id: 0 }
+);</code></pre>
+    </details>
+
+    <details>
+        <summary>13. Write Mongo query to retrieve the documents from the payments collection with a specific payment
+            method UPI?</summary>
+        <pre><code>db.payments.find({
+  "paymentMethod": "UPI"
+});</code></pre>
+    </details>
+
+
+
+
+
+</body>
+
+</html>

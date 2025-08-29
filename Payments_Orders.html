@@ -109,106 +109,9 @@
 
     <!-- Queries start here -->
 
-    <details>
-        <summary>1. Write Mongo query to retrieve the documents from the payments collection where payment status is
-            either null or pending?</summary>
-        <pre><code>db.payments.find({
-  "paymentStatus": { $in: [null, "pending"] }
-})</code></pre>
-    </details>
 
     <details>
-        <summary>2. Write Mongo query to find a buyer with the name John Smith and the email john@hotmail.com</summary>
-        <pre><code>db.buyers.findOne({
-  "name": "John Smith",
-  "email": "john@hotmail.com"
-});</code></pre>
-    </details>
-
-    <details>
-        <summary>3. Find all Trips?</summary>
-        <pre><code>db.Description.find({
-  trip: { $exists: true }
-})</code></pre>
-    </details>
-
-    <details>
-        <summary>4. Write Mongo query to retrieve the documents from the payments collection without a payment date?
-        </summary>
-        <pre><code>db.payments.find({
-  "payments_date": { $eq: null }
-});</code></pre>
-    </details>
-
-    <details>
-        <summary>5. Find all companies from the companies collection?</summary>
-        <pre><code>db.companies.find({});</code></pre>
-    </details>
-
-    <details>
-        <summary>6. Write Mongo query to find a product with a price greater than or equal to 1500?</summary>
-        <pre><code>db.order_details.findOne({
-  price: { $gte: 1500 }
-});</code></pre>
-    </details>
-
-    <details>
-        <summary>7. Write Mongo query to retrieve all the orders that shipped before 2022-05-26</summary>
-        <pre><code>db.order.find({
-  "ship_date": { $lt: "2022-05-26" }
-});</code></pre>
-    </details>
-
-    <details>
-        <summary>8. Print all details of orders whose Total Order Amount is greater than 5000?</summary>
-        <pre><code>db.orders.find({
-  "Total_order_amount": { $gt: 5000 }
-});</code></pre>
-    </details>
-
-    <details>
-        <summary>9. Write Mongo query to retrieve the documents from the payments collection with a non-null
-            payment_date?</summary>
-        <pre><code>db.payments.find({
-  paymentDate: { $ne: null }
-});</code></pre>
-    </details>
-
-    <details>
-        <summary>10. Write Mongo query to find the total number of orders shipped?</summary>
-        <pre><code>db.orders.aggregate([
-  { $match: { "status": "shipped" } },
-  { $count: "total_shipped_orders" }
-]);</code></pre>
-    </details>
-
-    <details>
-        <summary>11. Write Mongo query to find first order with customer ID 2 in orders collection?</summary>
-        <pre><code>db.orders.findOne({
-  "customer_id": 2
-});</code></pre>
-    </details>
-
-    <details>
-        <summary>12. Write Mongo query to retrieve the documents from the payments collection with their paymentMethod?
-        </summary>
-        <pre><code>db.payments.find(
-  {},
-  { "paymentMethod": 1, _id: 0 }
-);</code></pre>
-    </details>
-
-    <details>
-        <summary>13. Write Mongo query to retrieve the documents from the payments collection with a specific payment
-            method UPI?</summary>
-        <pre><code>db.payments.find({
-  "paymentMethod": "UPI"
-});</code></pre>
-    </details>
-
-
-    <details>
-        <summary>14. Write Mongo query to retrieve the orders grouped by customer_id with the min total</summary>
+        <summary>1. Write Mongo query to retrieve the orders grouped by customer_id with the min total</summary>
         <pre><code>db.orders.aggregate([
   {
     $group: {
@@ -220,7 +123,7 @@
     </details>
 
     <details>
-        <summary>15. Write Mongo query to get the total revenue from all orders</summary>
+        <summary>2. Write Mongo query to get the total revenue from all orders</summary>
         <pre><code>db.orders.aggregate([
   {
     $group: {
@@ -232,7 +135,7 @@
     </details>
 
     <details>
-        <summary>16. Find the number of Customers per City & Country (sorted by City)</summary>
+        <summary>3. Find the number of Customers per City & Country (sorted by City)</summary>
         <pre><code>db.customers.aggregate([
   { $group: { _id: { city: "$City", country: "$Country" }, numCustomers: { $sum: 1 } } },
   { $sort: { "_id.city": 1 } },
@@ -241,7 +144,7 @@
     </details>
 
     <details>
-        <summary>17. Retrieve the payment of order _id:1 with paymentStatus</summary>
+        <summary>4. Retrieve the payment of order _id:1 with paymentStatus</summary>
         <pre><code>db.orders.aggregate([
   { $match: { _id: 1 } },
   { $lookup: {
@@ -256,7 +159,7 @@
     </details>
 
     <details>
-        <summary>18. Total number of suppliers in each city (descending)</summary>
+        <summary>5. Total number of suppliers in each city (descending)</summary>
         <pre><code>db.suppliers.aggregate([
   { $group: { _id: "$address.city", count: { $sum: 1 } } },
   { $sort: { count: -1 } }
@@ -264,7 +167,7 @@
     </details>
 
     <details>
-        <summary>19. Find sum of Total order amount for each shipper (ascending)</summary>
+        <summary>6. Find sum of Total order amount for each shipper (ascending)</summary>
         <pre><code>db.orders.aggregate([
   { $group: { _id: "$ShipperID", totalOrderAmount: { $sum: "$OrderAmount" } } },
   { $sort: { totalOrderAmount: 1 } }
@@ -272,12 +175,12 @@
     </details>
 
     <details>
-        <summary>20. Find names and phone numbers of all shippers</summary>
+        <summary>7. Find names and phone numbers of all shippers</summary>
         <pre><code>db.shippers.find({}, { name: 1, phone: 1, _id: 0 })</code></pre>
     </details>
 
     <details>
-        <summary>21. Average total of orders made by customers in California (CA)</summary>
+        <summary>8. Average total of orders made by customers in California (CA)</summary>
         <pre><code>db.orders.aggregate([
   { $match: { "address.state": "CA" } },
   { $group: { _id: null, avgTotal: { $avg: "$total" } } },
@@ -286,19 +189,19 @@
     </details>
 
     <details>
-        <summary>22. Find total count of orders by status</summary>
+        <summary>9. Find total count of orders by status</summary>
         <pre><code>db.orders.aggregate([
   { $group: { _id: "$status", count: { $sum: 1 } } }
 ])</code></pre>
     </details>
 
     <details>
-        <summary>23. Print all details of orders placed on 8th August 2021</summary>
+        <summary>10. Print all details of orders placed on 8th August 2021</summary>
         <pre><code>db.orders.find({ OrderDate: "2021-08-08" }).sort({ OrderID: -1 })</code></pre>
     </details>
 
     <details>
-        <summary>24. Retrieve the shipper name for order with _id:1</summary>
+        <summary>11. Retrieve the shipper name for order with _id:1</summary>
         <pre><code>db.orders.aggregate([
   { $match: { _id: 1 } },
   { $lookup: {
@@ -313,19 +216,19 @@
     </details>
 
     <details>
-        <summary>25. Find all shipped orders</summary>
+        <summary>12. Find all shipped orders</summary>
         <pre><code>db.orders.find({ status: "shipped" })</code></pre>
     </details>
 
     <details>
-        <summary>26. Retrieve orders grouped by customer_id with total sum</summary>
+        <summary>13. Retrieve orders grouped by customer_id with total sum</summary>
         <pre><code>db.orders.aggregate([
   { $group: { _id: "$customer_id", total: { $sum: "$orderAmountField" } } }
 ])</code></pre>
     </details>
 
     <details>
-        <summary>27. Retrieve all orders with their corresponding customer details</summary>
+        <summary>14. Retrieve all orders with their corresponding customer details</summary>
         <pre><code>db.orders.aggregate([
   { $lookup: {
       from: "customers",
@@ -337,7 +240,7 @@
     </details>
 
     <details>
-        <summary>28. Find users with name and email who use Hotmail</summary>
+        <summary>15. Find users with name and email who use Hotmail</summary>
         <pre><code>db.buyers.aggregate([
   { $match: { email: { $regex: "@hotmail\\.com$", $options: "i" } } },
   { $group: { _id: "$name", emails: { $push: "$email" } } }
@@ -345,17 +248,17 @@
     </details>
 
     <details>
-        <summary>29. Retrieve documents from payments collection with non-null payment_date</summary>
+        <summary>16. Retrieve documents from payments collection with non-null payment_date</summary>
         <pre><code>db.payments.find({ paymentDate: { $ne: null } })</code></pre>
     </details>
 
     <details>
-        <summary>30. Find all customers</summary>
+        <summary>17. Find all customers</summary>
         <pre><code>db.customers.find()</code></pre>
     </details>
 
     <details>
-        <summary>31. Find city with the longest name and its length</summary>
+        <summary>18. Find city with the longest name and its length</summary>
         <pre><code>db.customers.aggregate([
   { $group: { _id: "$City", nameLength: { $first: { $strLenCP: "$City" } } } },
   { $sort: { nameLength: -1 } },
@@ -365,29 +268,29 @@
     </details>
 
     <details>
-        <summary>32. Find number of orders placed by each customer (with name)</summary>
+        <summary>19. Find number of orders placed by each customer (with name)</summary>
         <pre><code>db.orders.aggregate([
   { $group: { _id: "$customer_id", order_count: { $sum: 1 } } }
 ])</code></pre>
     </details>
 
     <details>
-        <summary>33. Retrieve payments sorted by amount (descending)</summary>
+        <summary>20. Retrieve payments sorted by amount (descending)</summary>
         <pre><code>db.payments.find({}).sort({ amount: -1 })</code></pre>
     </details>
 
     <details>
-        <summary>34. Retrieve payments with amount ≤ 30</summary>
+        <summary>21. Retrieve payments with amount ≤ 30</summary>
         <pre><code>db.payments.find({ amount: { $lte: 30 } })</code></pre>
     </details>
 
     <details>
-        <summary>35. Find names and email addresses of buyers from San Francisco</summary>
+        <summary>22. Find names and email addresses of buyers from San Francisco</summary>
         <pre><code>db.buyers.find({ "address.city": "San Francisco" }, { name: 1, email: 1, _id: 0 })</code></pre>
     </details>
 
     <details>
-        <summary>36. Find orders placed in April 2022</summary>
+        <summary>23. Find orders placed in April 2022</summary>
         <pre><code>db.orders.find({
   order_date: {
     $gte: ISODate("2022-04-01T00:00:00.000Z"),
@@ -397,7 +300,7 @@
     </details>
 
     <details>
-        <summary>37. Calculate average score for each grade category (restaurants)</summary>
+        <summary>24. Calculate average score for each grade category (restaurants)</summary>
         <pre><code>db.restaurants.aggregate([
   { $unwind: "$grades" },
   { $group: { _id: "$grades.grade", avgScore: { $avg: "$grades.score" } } }
@@ -405,7 +308,7 @@
     </details>
 
     <details>
-        <summary>38. Retrieve buyers in California (CA), sorted by name desc, limit 3</summary>
+        <summary>25. Retrieve buyers in California (CA), sorted by name desc, limit 3</summary>
         <pre><code>db.buyers.find({ "address.state": "CA" })
   .sort({ name: -1 })
   .limit(3)</code></pre>
